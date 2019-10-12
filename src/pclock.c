@@ -12,7 +12,7 @@
 
 #define PERM (S_IRUSR | S_IWUSR)
 
-// TODO: A better design would be to always have sec and nano derived. Just use total tick.
+
 static int semid;
 static struct sembuf semlock;
 static struct sembuf semunlock;
@@ -69,6 +69,7 @@ int destruct_clock(int key, int shid) {
 }
 
 
+/*Return a copy of the system clock into `copy`*/
 int get_copy(pclock_t* copy) {
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
