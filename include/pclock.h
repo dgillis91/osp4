@@ -14,8 +14,6 @@
 /* Abstract representation of a system clock.
 */
 typedef struct {
-    unsigned int seconds;
-    unsigned int nanoseconds;
     unsigned long total_tick;
     sig_atomic_t ready;
 } pclock_t;

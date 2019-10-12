@@ -48,9 +48,7 @@ int init_clock(int key) {
         if (system_clock == (void*)(-1)) {
             return -1;
         }
-        system_clock->nanoseconds = 0;
         system_clock->total_tick = 0;
-        system_clock->seconds = 0;
     }
     semid = initsemset(key, 1, &system_clock->ready);
     if (semid == -1) {
@@ -75,18 +73,16 @@ int get_copy(pclock_t* copy) {
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     copy->total_tick = system_clock->total_tick;
-    copy->nanoseconds = system_clock->nanoseconds;
-    copy->seconds = system_clock->seconds;
     if (semop(semid, &semunlock, 1) == -1)
         return -1;
     return 1;
 }
 
 
+/* Increment the system clock by `nanoseconds`.
+ * Method synchronizes access to `system_clock`.
+*/
 int tick(int nanoseconds) {
-    /* Increment the system clock by `nanoseconds`.
-    ** Method synchronizes access to `system_clock`.
-    */
     if (semop(semid, &semlock, 1) == -1)
         return -1;
     add_in_place(system_clock, nanoseconds);
@@ -103,14 +99,12 @@ pclock_t add(pclock_t clock, unsigned int nanoseconds) {
 }
 
 
+/* Add `nanoseconds` to `clock`. Addition done in place.
+ * No regard given to synchronization. Methods acting on
+ * `clock` should work with `clock->readyp` externally.
+*/
 void add_in_place(pclock_t* clock, unsigned int nanoseconds) {
-    /* Add `nanoseconds` to `clock`. Addition done in place.
-    ** No regard given to synchronization. Methods acting on
-    ** `clock` should work with `clock->readyp` externally.
-    */
     clock->total_tick += nanoseconds;
-    clock->nanoseconds = clock->total_tick % NANO_SEC_IN_SEC;
-    clock->seconds = clock->total_tick / NANO_SEC_IN_SEC;
 }
 
 
@@ -127,10 +121,10 @@ int is_equal_to_sys_clock(pclock_t clock) {
 unsigned int get_seconds() {
     if (semop(semid, &semlock, 1) == -1)
         return 0;
-    unsigned int s = system_clock->seconds;
+    unsigned int n = system_clock->total_tick;
     if (semop(semid, &semunlock, 1) == -1)
         return 0;
-    return s;
+    return n / NANO_SEC_IN_SEC;
 }
 
 
@@ -138,11 +132,11 @@ unsigned int get_nano() {
     if (semop(semid, &semlock, 1) == -1) {
         return 0;
     }
-    unsigned int n = system_clock->nanoseconds;
+    unsigned int n = system_clock->total_tick;
     if (semop(semid, &semunlock, 1) == -1) {
         return 0;
     }
-    return n;
+    return n % NANO_SEC_IN_SEC;
 }
 
 
