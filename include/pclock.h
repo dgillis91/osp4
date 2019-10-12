@@ -21,10 +21,10 @@ typedef struct {
 
 int init_clock(int);
 int destruct_clock(int, int);
-int get_copy(pclock_t*);
-int tick(int);
-pclock_t add(pclock_t, unsigned int);
-void add_in_place(pclock_t*, unsigned int);
+int get_copy_of_system_clock(pclock_t*);
+int tick_clock(int);
+pclock_t clock_add(pclock_t, unsigned int);
+void clock_add_in_place(pclock_t*, unsigned int);
 int is_equal_to_sys_clock(pclock_t);
 unsigned int get_seconds();
 unsigned int get_nano();

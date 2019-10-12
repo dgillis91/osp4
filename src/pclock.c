@@ -69,8 +69,8 @@ int destruct_clock(int key, int shid) {
 }
 
 
-/*Return a copy of the system clock into `copy`*/
-int get_copy(pclock_t* copy) {
+/* Return a copy of the system clock into `copy`*/
+int get_copy_of_system_clock(pclock_t* copy) {
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     copy->total_tick = system_clock->total_tick;
@@ -83,7 +83,7 @@ int get_copy(pclock_t* copy) {
 /* Increment the system clock by `nanoseconds`.
  * Method synchronizes access to `system_clock`.
 */
-int tick(int nanoseconds) {
+int tick_clock(int nanoseconds) {
     if (semop(semid, &semlock, 1) == -1)
         return -1;
     add_in_place(system_clock, nanoseconds);
@@ -93,9 +93,8 @@ int tick(int nanoseconds) {
 }
 
 
-// TODO: These clock methods should have more informative names.
-pclock_t add(pclock_t clock, unsigned int nanoseconds) {
-    add_in_place(&clock, nanoseconds);
+pclock_t clock_add(pclock_t clock, unsigned int nanoseconds) {
+    clock_add_in_place(&clock, nanoseconds);
     return clock;
 }
 
@@ -104,7 +103,7 @@ pclock_t add(pclock_t clock, unsigned int nanoseconds) {
  * No regard given to synchronization. Methods acting on
  * `clock` should work with `clock->readyp` externally.
 */
-void add_in_place(pclock_t* clock, unsigned int nanoseconds) {
+void clock_add_in_place(pclock_t* clock, unsigned int nanoseconds) {
     clock->total_tick += nanoseconds;
 }
 
