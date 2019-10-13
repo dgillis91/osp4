@@ -9,8 +9,8 @@
 
 typedef struct pcb_table {
     pcb_t buffer[PROCESS_BUFFER_LENGTH];
-    u_int32_t processes_allocation_bitmap;
-    unsigned int process_allocation_count;
+    u_int32_t process_allocation_bitmap;
+    unsigned int count_processes_allocated;
 } pcb_table_t;
 
 
