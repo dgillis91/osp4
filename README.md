@@ -1,4 +1,8 @@
 # Operating Systems Assignment Four
 
-Next Steps:
-* Update method names because we don't have namespaces.
+## Technical
+
+### Spawn Algorithm
+1. Spawn a child. This will allocate the mock pid. At this point,
+the child is in NEW status.
+2. Call fork, assign the forked PID to the new PCB.
