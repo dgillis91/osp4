@@ -19,7 +19,7 @@ int main(void) {
     u_int32_t i;
     for (i = 0; i < 257; ++i) {
         bitmap = i;
-        int first_index_set = __builtin_ffs(bitmap);
+        int first_index_set = __builtin_ffs(~bitmap);
         printf("[+] First set bit index in %d: %d\n", bitmap, first_index_set);
     }
     printf("[+] sizeof(int):               %d\n", (int) sizeof(u_int32_t));
