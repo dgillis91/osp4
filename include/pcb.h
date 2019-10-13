@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#define PROCESS_BUFFER_LENGTH 18
-
 typedef enum process_state {
-    NEW, READY, RUNNING, BLOCKED, EXIT
+    PCB_STATE_NEW, PCB_STATE_READY, 
+    PCB_STATE_RUNNING, PCB_STATE_BLOCKED, 
+    PCB_STATE_EXIT
 } process_state_t;
 
 
@@ -24,5 +24,7 @@ typedef struct pcb {
     unsigned int idle_tick_count;
 } pcb_t;
 
+
+pcb_t reset_pcb(pcb_t* _pcb);
 
 #endif PCB_H_
