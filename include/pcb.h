@@ -25,16 +25,4 @@ typedef struct pcb {
 } pcb_t;
 
 
-typedef struct pcb_table {
-    pcb_t buffer[PROCESS_BUFFER_LENGTH];
-    u_int32_t processes_allocation_bitmap;
-    unsigned int process_allocation_count;
-} pcb_table_t;
-
-
-int initialize_process_table();
-int is_process_buffer_full();
-int allocate_next_pid();
-
-
 #endif PCB_H_
