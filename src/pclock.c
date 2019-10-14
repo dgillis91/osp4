@@ -86,7 +86,7 @@ int get_copy_of_system_clock(pclock_t* copy) {
 int tick_clock(int nanoseconds) {
     if (semop(semid, &semlock, 1) == -1)
         return -1;
-    add_in_place(system_clock, nanoseconds);
+    clock_add_in_place(system_clock, nanoseconds);
     if (semop(semid, &semunlock, 1) == -1) 
         return -1;
     return 0;
