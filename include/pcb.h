@@ -25,6 +25,6 @@ typedef struct pcb {
 } pcb_t;
 
 
-pcb_t reset_pcb(pcb_t* _pcb);
+void reset_pcb(pcb_t* _pcb);
 
 #endif PCB_H_

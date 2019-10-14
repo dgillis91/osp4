@@ -4,7 +4,7 @@
 
 /* Reset to the initial values of `_pcb`.
  */
-pcb_t reset_pcb(pcb_t* _pcb) {
+void reset_pcb(pcb_t* _pcb) {
     _pcb->pid = 0;
     _pcb->state = PCB_STATE_NEW;
     _pcb->start_time_tick = 0;
