@@ -83,7 +83,7 @@ int get_copy_of_system_clock(pclock_t* copy) {
 /* Increment the system clock by `nanoseconds`.
  * Method synchronizes access to `system_clock`.
 */
-int tick_clock(int nanoseconds) {
+int tick_clock(unsigned long nanoseconds) {
     if (semop(semid, &semlock, 1) == -1)
         return -1;
     clock_add_in_place(system_clock, nanoseconds);
@@ -93,7 +93,7 @@ int tick_clock(int nanoseconds) {
 }
 
 
-pclock_t clock_add(pclock_t clock, unsigned int nanoseconds) {
+pclock_t clock_add(pclock_t clock, unsigned long nanoseconds) {
     clock_add_in_place(&clock, nanoseconds);
     return clock;
 }
@@ -103,7 +103,7 @@ pclock_t clock_add(pclock_t clock, unsigned int nanoseconds) {
  * No regard given to synchronization. Methods acting on
  * `clock` should work with `clock->readyp` externally.
 */
-void clock_add_in_place(pclock_t* clock, unsigned int nanoseconds) {
+void clock_add_in_place(pclock_t* clock, unsigned long nanoseconds) {
     clock->total_tick += nanoseconds;
 }
 
@@ -140,7 +140,7 @@ unsigned int get_nano() {
 }
 
 
-unsigned long get_total_tick() {
+unsigned long long get_total_tick() {
     if (semop(semid, &semlock, 1) == -1) {
         return 0;
     }
