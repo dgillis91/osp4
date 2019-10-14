@@ -20,7 +20,7 @@ typedef struct {
 
 
 int init_clock(int);
-int destruct_clock(int, int);
+int destruct_clock(int);
 int get_copy_of_system_clock(pclock_t*);
 int tick_clock(int);
 pclock_t clock_add(pclock_t, unsigned int);

@@ -58,7 +58,7 @@ int init_clock(int key) {
 }
 
 
-int destruct_clock(int key, int shid) {
+int destruct_clock(int shid) {
     if (removesem(semid) == -1) {
         return -1;
     }
