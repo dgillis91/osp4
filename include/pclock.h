@@ -9,7 +9,7 @@
 #define P_CLOCK_H_
 #include <signal.h>
 
-#define NANO_SEC_IN_SEC 1000000000
+#define NANO_SEC_IN_SEC 1000000000L
 
 /* Abstract representation of a system clock.
 */
