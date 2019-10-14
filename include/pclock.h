@@ -28,7 +28,7 @@ void clock_add_in_place(pclock_t*, unsigned long);
 int is_equal_to_sys_clock(pclock_t);
 unsigned int get_seconds();
 unsigned int get_nano();
-unsigned long long get_total_tick();
+unsigned long get_total_tick();
 
 
 #endif

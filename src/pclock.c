@@ -121,7 +121,7 @@ int is_equal_to_sys_clock(pclock_t clock) {
 unsigned int get_seconds() {
     if (semop(semid, &semlock, 1) == -1)
         return 0;
-    unsigned int n = system_clock->total_tick;
+    unsigned long n = system_clock->total_tick;
     if (semop(semid, &semunlock, 1) == -1)
         return 0;
     return n / NANO_SEC_IN_SEC;
@@ -132,7 +132,7 @@ unsigned int get_nano() {
     if (semop(semid, &semlock, 1) == -1) {
         return 0;
     }
-    unsigned int n = system_clock->total_tick;
+    unsigned long n = system_clock->total_tick;
     if (semop(semid, &semunlock, 1) == -1) {
         return 0;
     }
@@ -140,11 +140,11 @@ unsigned int get_nano() {
 }
 
 
-unsigned long long get_total_tick() {
+unsigned long get_total_tick() {
     if (semop(semid, &semlock, 1) == -1) {
         return 0;
     }
-    unsigned int t = system_clock->total_tick;
+    unsigned long t = system_clock->total_tick;
     if (semop(semid, &semunlock, 1) == -1) {
         return 0;
     }
