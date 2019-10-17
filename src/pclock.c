@@ -15,8 +15,10 @@
 
 static int semid;
 static int shid;
+
 static struct sembuf semlock;
 static struct sembuf semunlock;
+
 static pclock_t* system_clock;
 
 
