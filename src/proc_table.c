@@ -2,9 +2,6 @@
 
 static const uint32_t ONE = 1;
 
-static uint32_t taken_pid_bitmap = 0;
-static uint8_t processes_allocated_count = 0;
-
 static pcb_table_t* process_table = NULL;
 
 
