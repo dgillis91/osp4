@@ -14,14 +14,13 @@
 
 
 static int semid;
+static int shid;
 static struct sembuf semlock;
 static struct sembuf semunlock;
 static pclock_t* system_clock;
 
 
 int init_clock(int key) {
-    int shid;
-
     setsembuf(&semlock, 0, -1, 0);
     setsembuf(&semunlock, 0, 1, 0);
 
@@ -54,11 +53,11 @@ int init_clock(int key) {
     if (semid == -1) {
         return -1;
     }
-    return shid;
+    return 1;
 }
 
 
-int destruct_clock(int shid) {
+int destruct_clock() {
     if (removesem(semid) == -1) {
         return -1;
     }
