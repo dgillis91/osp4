@@ -14,8 +14,10 @@ static const uint32_t ONE = 1;
 
 static int semid;
 static int shid;
+
 static struct sembuf semlock;
 static struct sembuf semunlock;
+
 static pcb_table_t* process_table = NULL;
 
 
@@ -57,7 +59,7 @@ int init_process_table(int key) {
 }
 
 
-int destruct_clock() {
+int destruct_process_table() {
     if (removesem(semid) == -1) {
         return -1;
     }
