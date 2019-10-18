@@ -9,7 +9,7 @@
 #include "../include/pclock.h"
 #include "../include/util.h"
 
-#define MAX_TIME_BETWEEN_PROCESSES 100
+#define MAX_TIME_BETWEEN_PROCESSES 1000
 #define MAX_ALLOWABLE_PROCESSES 100
 #define CLOCK_TICK_INCREMENT 2
 
@@ -38,13 +38,18 @@ int main(int argc, char* argv[]) {
     // the parent.
     srand(time(NULL));
 
-    while (count_processes_generated < MAX_ALLOWABLE_PROCESSES) {
-        unsigned long next_child_generation_time;
+    unsigned long next_child_generation_time = 0;
+    unsigned long time_until_next_generation;
+    unsigned long current_tick;
+    while ((current_tick = get_total_tick()) <= 10000) {
+        if (current_tick >= next_child_generation_time) {
+            time_until_next_generation = rand_below(MAX_TIME_BETWEEN_PROCESSES);
+            next_child_generation_time = current_tick + time_until_next_generation;
+            fprintf(stdout, "[%u.%u] next child generates at %lu\n",
+                    get_seconds(), get_nano(), next_child_generation_time);
+        }
         tick_clock(CLOCK_TICK_INCREMENT);
     }
-
-    int wait_stat;
-    wait(&wait_stat);
 
     destruct_clock();
     destruct_process_table();
