@@ -103,7 +103,13 @@ int is_process_buffer_full() {
 }
 
 
-/* Find the next available PID, and allocate it. 
+/* Find the next available PID, and allocate it.
+ * Users should check whether the process buffer
+ * is full, first. This is because we also choose
+ * to generate process IDs, and things are a tad
+ * messy. 
+ * Will return -1 if the buffer is full. Again,
+ * this is just a safety net.
  */
 int allocate_next_pid() {
     if (semop(semid, &semlock, 1) == -1) 
