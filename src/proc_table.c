@@ -19,7 +19,7 @@ static struct sembuf semunlock;
 static pcb_table_t* process_table = NULL;
 
 
-int init_clock(int key) {
+int init_process_table(int key) {
     setsembuf(&semlock, 0, -1, 0);
     setsembuf(&semunlock, 0, 1, 0);
 
@@ -51,6 +51,17 @@ int init_clock(int key) {
     }
     semid = initsemset(key, 1, &process_table->ready);
     if (semid == -1) {
+        return -1;
+    }
+    return 1;
+}
+
+
+int destruct_clock() {
+    if (removesem(semid) == -1) {
+        return -1;
+    }
+    if (detachandremove(shid, process_table) == -1) {
         return -1;
     }
     return 1;
