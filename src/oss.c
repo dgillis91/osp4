@@ -10,12 +10,15 @@
 #include "../include/util.h"
 
 #define MAX_TIME_BETWEEN_PROCESSES 100
+#define MAX_ALLOWABLE_PROCESSES 100
+#define CLOCK_TICK_INCREMENT 2
 
 #define CLOCK_KEY 8675309
 #define PROC_TABLE_KEY 8675310
 
 
 int main(int argc, char* argv[]) {
+    int count_processes_generated = 0;
     int clock_init_stat, proc_table_init_stat;
     clock_init_stat = init_clock(CLOCK_KEY);
     if (clock_init_stat == -1) {
@@ -35,15 +38,9 @@ int main(int argc, char* argv[]) {
     // the parent.
     srand(time(NULL));
 
-    unsigned long i;
-    for (i = 0; i < NANO_SEC_IN_SEC * 20; i += 100000000) {
-        tick_clock(100000000);
-        printf("%u.%u: %lu\n", get_seconds(), get_nano(), get_total_tick());
-    }
-
-    pid_t child_pid = fork();
-    if (child_pid == 0) {
-        execl("user", "user", NULL);
+    while (count_processes_generated < MAX_ALLOWABLE_PROCESSES) {
+        unsigned long next_child_generation_time;
+        tick_clock(CLOCK_TICK_INCREMENT);
     }
 
     int wait_stat;
