@@ -4,7 +4,7 @@ CFLAGS=-I$(IDIR)
 
 ODIR=../obj
 
-_DEPS = semutil.h shmutil.h pclock.h proc_table.h pcb.h
+_DEPS = semutil.h shmutil.h pclock.h proc_table.h pcb.h util.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = oss.o shmutil.o semutil.o pclock.o proc_table.o pcb.o util.o
