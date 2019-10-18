@@ -43,6 +43,21 @@ int main(int argc, char* argv[]) {
     unsigned long current_tick;
     while ((current_tick = get_total_tick()) <= 10000) {
         if (current_tick >= next_child_generation_time) {
+            // If the buffer isn't full
+            if (!is_process_buffer_full()) {
+                // fork the child
+                pid_t child_pid = fork();
+                // In the parent
+                if (child_pid) {
+                    // Allocate the pid
+                    allocate_next_pid(child_pid);
+                    // Set the variables . . . 
+                    // Send a message to the child telling it to run.
+                } else {
+                    // EXEC. The child can spin until we send
+                    // it a message saying to do whatever. 
+                }
+            }
             time_until_next_generation = rand_below(MAX_TIME_BETWEEN_PROCESSES);
             next_child_generation_time = current_tick + time_until_next_generation;
             fprintf(stdout, "[%u.%u] next child generates at %lu\n",
