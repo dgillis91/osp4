@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
         destruct_clock();
         return EXIT_FAILURE;
     }
-    proc_table_init_stat = initialize_process_table(PROC_TABLE_KEY);
+    proc_table_init_stat = init_process_table(PROC_TABLE_KEY);
     if (proc_table_init_stat == -1) {
         perror("Failed to allocate process table");
         destruct_process_table();
