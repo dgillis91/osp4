@@ -104,6 +104,8 @@ int is_process_buffer_full() {
 
 
 /* Find the next available PID, and allocate it.
+ * Places the `actual_pid` in the buffer entry
+ * for the next pid found.
  * Users should check whether the process buffer
  * is full, first. This is because we also choose
  * to generate process IDs, and things are a tad
@@ -111,7 +113,7 @@ int is_process_buffer_full() {
  * Will return -1 if the buffer is full. Again,
  * this is just a safety net.
  */
-int allocate_next_pid() {
+int allocate_next_pid(pid_t actual_pid) {
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     if (process_table->count_processes_allocated >= PROCESS_BUFFER_LENGTH) {
@@ -119,6 +121,7 @@ int allocate_next_pid() {
     }
     unsigned int next_pid = next_available_pid();
     setbit(next_pid);
+    process_table->buffer[next_pid].actual_pid = actual_pid;
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     return next_pid;

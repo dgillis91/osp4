@@ -19,6 +19,6 @@ typedef struct pcb_table {
 int init_process_table(int key);
 int destruct_process_table();
 int is_process_buffer_full();
-int allocate_next_pid();
+int allocate_next_pid(pid_t actual_pid);
 
 #endif
