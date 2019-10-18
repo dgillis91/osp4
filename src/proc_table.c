@@ -122,6 +122,7 @@ int allocate_next_pid(pid_t actual_pid) {
     unsigned int next_pid = next_available_pid();
     setbit(next_pid);
     process_table->buffer[next_pid].actual_pid = actual_pid;
+    ++process_table->count_processes_allocated;
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     return next_pid;
