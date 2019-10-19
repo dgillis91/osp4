@@ -6,7 +6,7 @@
 
 #include "../include/pcb.h"
 
-#define PROCESS_BUFFER_LENGTH 18
+#define PROCESS_BUFFER_LENGTH 1
 
 typedef struct pcb_table {
     pcb_t buffer[PROCESS_BUFFER_LENGTH];
