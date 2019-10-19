@@ -124,7 +124,29 @@ int allocate_next_pid(pid_t actual_pid) {
     reset_pcb(&process_table->buffer[next_pid]);
     process_table->buffer[next_pid].actual_pid = actual_pid;
     ++process_table->count_processes_allocated;
+    // XXX: BUG - doesn't unlock.
     if (semop(semid, &semlock, 1) == -1) 
         return -1;
     return next_pid;
+}
+
+
+int get_abstract_pid_from_actual(pid_t actual_pid) {
+    int pid_index = 0;
+    if (semop(semid, &semlock, 1) == -1)
+        return -1;
+    unsigned int i;
+    for (i = 0; i < process_table->count_processes_allocated; ++i) {
+        if (process_table->buffer[i].actual_pid == actual_pid) {
+            pid_index = i;
+            break;
+        }
+    }
+    if (semop(semid, &semunlock, 1) == -1)
+        return NULL;
+    if (pid_index) {
+        return pid_index;
+    } else {
+        return -1;
+    }
 }
