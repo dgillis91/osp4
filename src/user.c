@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     int clock_init_stat = init_clock(CLOCK_KEY);
     fprintf(stderr, "[%d] Clock Time in Child: %u.%u: %lu\n",
             (int) me, get_seconds(), get_nano(), get_total_tick());
-    fprintf(stderr, "[%d] is_terminate: %u", (int) me, is_terminate());
+    fprintf(stderr, "[%d] is_terminate: %u\n", (int) me, is_terminate());
 
     return EXIT_SUCCESS;
 }
