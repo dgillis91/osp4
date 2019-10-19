@@ -143,7 +143,7 @@ int get_abstract_pid_from_actual(pid_t actual_pid) {
         }
     }
     if (semop(semid, &semunlock, 1) == -1)
-        return NULL;
+        return -1;
     if (pid_index) {
         return pid_index;
     } else {
