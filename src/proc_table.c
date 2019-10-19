@@ -125,7 +125,7 @@ int allocate_next_pid(pid_t actual_pid) {
     process_table->buffer[next_pid].actual_pid = actual_pid;
     ++process_table->count_processes_allocated;
     // XXX: BUG - doesn't unlock.
-    if (semop(semid, &semlock, 1) == -1) 
+    if (semop(semid, &semunlock, 1) == -1) 
         return -1;
     return next_pid;
 }
