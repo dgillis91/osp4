@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
             // If the buffer isn't full
             if (!is_process_buffer_full()) {
                 // fork the child
+                fprint(stdout, "[OSS %u.%u] forking child.\n", get_seconds(), get_nano());
                 pid_t child_pid = fork();
                 // In the parent
                 if (child_pid) {
@@ -54,8 +55,7 @@ int main(int argc, char* argv[]) {
                     // Set the variables . . . 
                     // Send a message to the child telling it to run.
                 } else {
-                    // EXEC. The child can spin until we send
-                    // it a message saying to do whatever. 
+                    execl("user", "user", NULL);
                 }
             }
             time_until_next_generation = rand_below(MAX_TIME_BETWEEN_PROCESSES);
