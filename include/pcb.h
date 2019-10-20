@@ -11,10 +11,19 @@ typedef enum process_state {
 } process_state_t;
 
 
+typedef enum process_priority {
+    PCB_PRIORITY_HIGH, 
+    PCB_PRIORITY_MEDIUM, 
+    PCB_PRIORITY_LOW
+} process_priority_t;
+
+
 typedef struct pcb {
     pid_t actual_pid;
     unsigned int pid;
     process_state_t state;
+    process_priority_t priority;
+    /* Times */
     unsigned int start_time_tick;
     unsigned int stop_time_tick;
     unsigned int last_burst_time_tick;
