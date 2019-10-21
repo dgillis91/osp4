@@ -15,6 +15,6 @@ typedef struct multi_level_feedback_queue {
 } multi_level_feedback_queue_t;
 
 
-void init_multi_level_feedback_queue();
+void init_multi_level_feedback_queue(multi_level_feedback_queue_t* q);
 
 #endif
