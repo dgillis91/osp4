@@ -26,6 +26,7 @@ typedef struct pcb {
     /* Times */
     unsigned int start_time_tick;
     unsigned int stop_time_tick;
+    unsigned int wake_time;
     unsigned int last_burst_time_tick;
     /* Metrics */
     unsigned int cpu_tick_count;

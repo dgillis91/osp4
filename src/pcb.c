@@ -10,6 +10,7 @@ void reset_pcb(pcb_t* _pcb) {
     _pcb->priority = PCB_PRIORITY_HIGH;
     _pcb->start_time_tick = 0;
     _pcb->stop_time_tick = 0;
+    _pcb->wake_time = 0;
     _pcb->last_burst_time_tick = 0;
     /* Metrics */
     _pcb->cpu_tick_count = 0;
