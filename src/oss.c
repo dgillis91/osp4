@@ -76,10 +76,9 @@ int main(int argc, char* argv[]) {
         } 
 
         // If there are processes in the blocked queue which are ready to unblock,
-        // iterate until they are all unblocked. 
+        // iterate until they are all unblocked aand assign them baack to their queue.
         pcb_t* unblocked;
         while ((unblocked = unblock_next_ready(get_total_tick())) != NULL) {
-            // Add it back to the queue it was alreaady in.
             process_queue_add(&run_queue.active_queues[unblocked->priority], unblocked);
         }
 
