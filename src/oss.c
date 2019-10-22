@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
         // If there are no processes allocated
         if (!get_process_allocated_count()) {
             tick_clock(CLOCK_TICK_INCREMENT);
-        // Else, we are waiting on a process to finish running
+        // Else, pull the next process to run, run it, and wait for it. 
         } else {
         
         }
