@@ -162,7 +162,7 @@ unsigned int get_process_allocated_count() {
 
 
 /* Return the PCB of the next process ready to unblock
- * at time `current_time`.
+ * at time `current_time`. Unblock it.
  */
 pcb_t* unblock_next_ready(unsigned long current_time) {
     int i;
