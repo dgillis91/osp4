@@ -50,6 +50,7 @@ int init_process_table(int key) {
         }
         process_table->count_processes_allocated = 0;
         process_table->process_allocation_bitmap = 0;
+        process_table->blocked_process_count = 0;
     }
     semid = initsemset(key, 1, &process_table->ready);
     if (semid == -1) {
@@ -124,7 +125,6 @@ int allocate_next_pid(pid_t actual_pid) {
     reset_pcb(&process_table->buffer[next_pid]);
     process_table->buffer[next_pid].actual_pid = actual_pid;
     ++process_table->count_processes_allocated;
-    // XXX: BUG - doesn't unlock.
     if (semop(semid, &semunlock, 1) == -1) 
         return -1;
     return next_pid;
@@ -149,4 +149,37 @@ int get_abstract_pid_from_actual(pid_t actual_pid) {
     } else {
         return -1;
     }
+}
+
+
+pcb_t* get_pcb(unsigned int abstract_pid) {
+    return &process_table->buffer[abstract_pid];
+}
+
+
+unsigned int get_blocked_process_count() {
+    return process_table->blocked_process_count;
+}
+
+
+unsigned int get_process_allocated_count() {
+    return process_table->count_processes_allocated;
+}
+
+
+pcb_t* get_next_ready_to_unblock(unsigned long tick) {
+    if (!get_blocked_process_count()) {
+        return NULL;
+    }
+    pcb_t* blocked_pcb;
+    int i;
+    for (i = 0; i < get_process_allocated_count(); ++i) {
+        if (process_table->buffer[i].wake_time > 0 && process_table->buffer[i].wake_time <= tick) {
+            blocked_pcb = &process_table->buffer[i];
+            blocked_pcb->wake_time = 0;
+            --process_table->blocked_process_count;
+            break;
+        }
+    }
+    return blocked_pcb;
 }
