@@ -7,6 +7,7 @@
 
 #include "../include/proc_table.h"
 #include "../include/pclock.h"
+#include "../include/sched.h"
 #include "../include/util.h"
 
 #define MAX_TIME_BETWEEN_PROCESSES 1000
@@ -15,6 +16,10 @@
 
 #define CLOCK_KEY 8675309
 #define PROC_TABLE_KEY 8675310
+
+#define HIGH_PRIORITY_INDEX 0
+#define MEDIUM_PRIORITY_INDEX 1
+#define LOW_PRIORITY_INDEX 2
 
 
 int main(int argc, char* argv[]) {
@@ -34,6 +39,9 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+    multi_level_feedback_queue_t run_queue;
+    init_multi_level_feedback_queue(&run_queue);
+
     // Seed the generator. Only need to generate from
     // the parent.
     srand(time(NULL));
@@ -42,6 +50,7 @@ int main(int argc, char* argv[]) {
     unsigned long time_until_next_generation;
     unsigned long current_tick;
     while ((current_tick = get_total_tick()) <= 10000) {
+        // If we are ready to generate a new process.
         if (current_tick >= next_child_generation_time) {
             // If the buffer isn't full
             if (!is_process_buffer_full()) {
@@ -51,9 +60,11 @@ int main(int argc, char* argv[]) {
                 // In the parent
                 if (child_pid) {
                     // Allocate the pid
-                    allocate_next_pid(child_pid);
-                    // Set the variables . . . 
-                    // Send a message to the child telling it to run.
+                    unsigned int abstract_pid;
+                    abstract_pid = allocate_next_pid(child_pid);
+                    // Get the PCB, and add it to the highest priority.
+                    pcb_t* new_proc = get_pcb(abstract_pid);
+                    process_queue_add(&run_queue.active_queues[HIGH_PRIORITY_INDEX], new_proc);
                 } else {
                     execl("user", "user", NULL);
                 }
@@ -62,6 +73,22 @@ int main(int argc, char* argv[]) {
             next_child_generation_time = current_tick + time_until_next_generation;
             fprintf(stdout, "[%u.%u] next child generates at %lu\n",
                     get_seconds(), get_nano(), next_child_generation_time);
+        } 
+
+        // If there are processes in the blocked queue which are ready to unblock,
+        // iterate until they are all unblocked. 
+        pcb_t* unblocked;
+        while ((unblocked = unblock_next_ready(get_total_tick())) != NULL) {
+            // Add it back to the queue it was alreaady in.
+            process_queue_add(&run_queue.active_queues[unblocked->priority], unblocked);
+        }
+
+        // If there are no processes allocated
+        if (!get_process_allocated_count()) {
+            tick_clock(CLOCK_TICK_INCREMENT);
+        // Else, we are waiting on a process to finish running
+        } else {
+        
         }
         tick_clock(CLOCK_TICK_INCREMENT);
     }

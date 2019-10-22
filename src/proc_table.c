@@ -50,7 +50,6 @@ int init_process_table(int key) {
         }
         process_table->count_processes_allocated = 0;
         process_table->process_allocation_bitmap = 0;
-        process_table->blocked_process_count = 0;
     }
     semid = initsemset(key, 1, &process_table->ready);
     if (semid == -1) {
@@ -157,29 +156,27 @@ pcb_t* get_pcb(unsigned int abstract_pid) {
 }
 
 
-unsigned int get_blocked_process_count() {
-    return process_table->blocked_process_count;
-}
-
-
 unsigned int get_process_allocated_count() {
     return process_table->count_processes_allocated;
 }
 
 
-pcb_t* get_next_ready_to_unblock(unsigned long tick) {
-    if (!get_blocked_process_count()) {
-        return NULL;
-    }
-    pcb_t* blocked_pcb;
+/* Return the PCB of the next process ready to unblock
+ * at time `current_time`.
+ */
+pcb_t* unblock_next_ready(unsigned long current_time) {
     int i;
+    // Iterate over the whole table
     for (i = 0; i < get_process_allocated_count(); ++i) {
-        if (process_table->buffer[i].wake_time > 0 && process_table->buffer[i].wake_time <= tick) {
-            blocked_pcb = &process_table->buffer[i];
-            blocked_pcb->wake_time = 0;
-            --process_table->blocked_process_count;
-            break;
+        // If we find a proc ready to unblock
+        if (process_table->buffer[i].wake_time > 0 
+            && process_table->buffer[i].wake_time <= current_time) {
+            // Unblock it and give aa pointer to the caller.
+            process_table->buffer[i].wake_time = 0;
+            return &process_table->buffer[i];
         }
     }
-    return blocked_pcb;
+    // If we get here, we made it through all, and none
+    // were ready to unblock.
+    return NULL;
 }

@@ -12,7 +12,6 @@ typedef struct pcb_table {
     pcb_t buffer[PROCESS_BUFFER_LENGTH];
     u_int32_t process_allocation_bitmap;
     unsigned int count_processes_allocated;
-    unsigned int blocked_process_count;
     sig_atomic_t ready;
 } pcb_table_t;
 
@@ -25,6 +24,6 @@ int get_abstract_pid_from_actual(pid_t actual_pid);
 pcb_t* get_pcb(unsigned int abstract_pid);
 unsigned int get_blocked_process_count();
 unsigned int get_process_allocated_count();
-pcb_t* get_next_ready_to_unblock(unsigned long tick);
+pcb_t* unblock_next_ready(unsigned long current_time);
 
 #endif
