@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
             // If the buffer isn't full
             if (!is_process_buffer_full()) {
                 // fork the child
-                fprint(stdout, "[OSS %u.%u] forking child.\n", get_seconds(), get_nano());
+                fprintf(stdout, "[OSS %u.%u] forking child.\n", get_seconds(), get_nano());
                 pid_t child_pid = fork();
                 // In the parent
                 if (child_pid) {
