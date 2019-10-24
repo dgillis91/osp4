@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "../include/proc_table.h"
+#include "../include/sharedvals.h"
 #include "../include/pclock.h"
 #include "../include/sched.h"
 #include "../include/util.h"
@@ -13,9 +14,6 @@
 #define MAX_TIME_BETWEEN_PROCESSES 1000
 #define MAX_ALLOWABLE_PROCESSES 100
 #define CLOCK_TICK_INCREMENT 2
-
-#define CLOCK_KEY 8675309
-#define PROC_TABLE_KEY 8675310
 
 #define HIGH_PRIORITY_INDEX 0
 #define MEDIUM_PRIORITY_INDEX 1

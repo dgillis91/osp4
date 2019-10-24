@@ -3,13 +3,12 @@
 #include <unistd.h>
 #include <time.h>
 
+#include "../include/sharedvals.h"
 #include "../include/pclock.h"
 #include "../include/util.h"
 
 #define RUN_TIME_MAX 1000000
 #define INT_PROBABILITY_OF_TERMINATION 50
-
-#define CLOCK_KEY 8675309
 
 
 int is_terminate() {

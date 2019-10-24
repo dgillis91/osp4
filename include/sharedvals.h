@@ -1,0 +1,8 @@
+#ifndef SHARED_VALS_H_
+#define SHARED_VALS_H_
+
+#define CLOCK_KEY 8675309
+#define PROC_TABLE_KEY 8675310
+#define MESSAGE_QUEUE_KEY 123456789
+
+#endif
