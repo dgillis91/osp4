@@ -31,5 +31,7 @@ int main(int argc, char* argv[]) {
             (int) me, get_seconds(), get_nano(), get_total_tick());
     fprintf(stderr, "[%d] is_terminate: %u\n", (int) me, is_terminate());
 
+    // When we send the message to the parent, use getppid()
+
     return EXIT_SUCCESS;
 }

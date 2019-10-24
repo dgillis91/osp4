@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <time.h>
+#include <sys/msg.h>
 
 #include "../include/proc_table.h"
 #include "../include/sharedvals.h"
@@ -19,6 +20,14 @@
 #define MEDIUM_PRIORITY_INDEX 1
 #define LOW_PRIORITY_INDEX 2
 
+typedef struct message_buffer {
+    long mtype;
+    pid_t child_pid;
+    unsigned long time_used;
+    child_stat_t status;
+} message_bufer_t;
+
+static int msgqid;
 
 int main(int argc, char* argv[]) {
     int count_processes_generated = 0;
@@ -37,8 +46,17 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+    // Initialize the feedback queue.
     multi_level_feedback_queue_t run_queue;
     init_multi_level_feedback_queue(&run_queue);
+
+    // Setup the message queue
+    msgqid = msgget(MESSAGE_QUEUE_KEY, IPC_CREAT | PERMS);
+    if (msgqid == -1) {
+        perror("Failed to initialize parent message queue");
+        destruct_process_table();
+        destruct_clock();
+    }
 
     // Seed the generator. Only need to generate from
     // the parent.
@@ -85,12 +103,52 @@ int main(int argc, char* argv[]) {
             tick_clock(CLOCK_TICK_INCREMENT);
         // Else, pull the next process to run, run it, and wait for it. 
         } else {
-        
+            process_queue_t* next_act_queue;
+            process_queue_t* next_exp_queue;
+            int index;
+            if (!process_queue_is_empty(&run_queue.active_queues[HIGH_PRIORITY_INDEX])) {
+                index = HIGH_PRIORITY_INDEX;
+            } else if (!process_queue_is_empty(&run_queue.active_queues[MEDIUM_PRIORITY_INDEX])) {
+                index = MEDIUM_PRIORITY_INDEX;
+            } else if (!process_queue_is_empty(&run_queue.active_queues[LOW_PRIORITY_INDEX])) {
+                index = LOW_PRIORITY_INDEX;
+            } else {
+                index = -1;
+            }
+            if (index > 0) {
+                pcb_t* proc;
+                message_bufer_t msg;
+                next_act_queue = &run_queue.active_queues[index];
+                next_exp_queue = &run_queue.expired_queues[index];
+                proc = process_queue_pop(next_act_queue);
+                // Send the message
+                msg.child_pid = proc->actual_pid;
+                msg.mtype = (long) proc->actual_pid;
+                int msg_stat = msgsnd(msgqid, &msg, sizeof(msg), 0);
+                if (msg_stat == -1) {
+                    perror("Fail to send message to child");
+                }
+                // Receive the message
+                if (msgrcv(msgqid, &msg, sizeof(msg), (long) getpid(), 0) == -1) {
+                    perror("Fail to get message from child");
+                }
+                // Handle the response 0-3
+                if (msg.status == STAT_BLOCK) {
+                    // TODO: Need time_used and time_response.
+                    proc->wake_time = msg.time_used;
+                } else if (msg.status == STAT_EARLY_PREEMPT) {
+
+                }
+                process_queue_add(next_exp_queue, proc);
+            }
         }
         tick_clock(CLOCK_TICK_INCREMENT);
     }
 
     destruct_clock();
     destruct_process_table();
+
+    msgctl(msgqid, IPC_RMID, NULL);
+
     return EXIT_SUCCESS;
 }
