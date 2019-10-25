@@ -1,8 +1,8 @@
 # Operating Systems Assignment Four
 
 ## Technical
+This is a currently non-working version of the code. However, I have to turn
+something in. 
 
-### Spawn Algorithm
-1. Spawn a child. This will allocate the mock pid. At this point,
-the child is in NEW status.
-2. Call fork, assign the forked PID to the new PCB.
+The code seg faults, among other things. I made my code too complex to early, and
+recovering from that was problematic.
