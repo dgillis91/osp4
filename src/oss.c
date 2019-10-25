@@ -75,15 +75,21 @@ int main(int argc, char* argv[]) {
                 pid_t child_pid = fork();
                 // In the parent
                 if (child_pid) {
-                    fprintf(stdout, "OSS: [%u.%u] forking child %ld. Processes allocated: %u\n", 
-                            get_seconds(), get_nano(), (long) child_pid, get_process_allocated_count());
+                    fprintf(stdout, "OSS: [%u.%u] forking child %ld.\n", 
+                            get_seconds(), get_nano(), (long) child_pid);
                     // Allocate the pid
                     unsigned int abstract_pid;
                     abstract_pid = allocate_next_pid(child_pid);
+                    //fprintf(stderr, "Child Pid: %d; Actual Pid: %d\n", child_pid, abstract_pid);
                     // Get the PCB, and add it to the highest priority.
                     pcb_t* new_proc = get_pcb(abstract_pid);
                     new_proc->init_time = get_total_tick();
+                    //fprintf(stderr, "ACTUAL PID: %d\n", (long) new_proc);
                     process_queue_add(&run_queue.active_queues[HIGH_PRIORITY_INDEX], new_proc);
+                    //pcb_t* a;
+                    //a = process_queue_pop(&run_queue.active_queues[HIGH_PRIORITY_INDEX]);
+                    //a->actual_pid;
+                    //fprintf(stderr, "rq_len %d\n", run_queue.active_queues[HIGH_PRIORITY_INDEX].queue[1]);
                 } else {
                     execl("user", "user", NULL);
                 }
@@ -123,6 +129,11 @@ int main(int argc, char* argv[]) {
                 fprintf(stderr, "Selected index %d\n", index);
                 fprintf(stderr, "OSS: NO SEG FAULT\n");
                 next_act_queue = &run_queue.active_queues[index];
+                //int j;
+                //for (j = 18; j > 0; --j) {
+                //    fprintf(stderr, "[-] OSS: q[%d]= %ld \n", 
+                //            j, (long) next_act_queue->queue[j]->actual_pid);
+                //}
                 next_exp_queue = &run_queue.expired_queues[index];
                 proc = process_queue_pop(next_act_queue);
                 fprintf(stderr, "OSS: NO SEG FAULT 2\n");
