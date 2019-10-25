@@ -14,6 +14,7 @@ void reset_pcb(pcb_t* _pcb) {
     _pcb->last_burst_time_tick = 0;
     /* Metrics */
     _pcb->cpu_tick_count = 0;
+    _pcb->init_time = 0;
     _pcb->sys_tick_count = 0;
     _pcb->idle_tick_count = 0;
 }

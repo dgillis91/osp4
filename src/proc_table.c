@@ -102,6 +102,12 @@ int is_process_buffer_full() {
     return is_full;
 }
 
+void deallocate_pid(pcb_t* pcb) {
+    reset_pcb(pcb);
+    unsetbit(pcb->pid);
+    --process_table->count_processes_allocated;
+}
+
 
 /* Find the next available PID, and allocate it.
  * Places the `actual_pid` in the buffer entry

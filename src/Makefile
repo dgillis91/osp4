@@ -7,10 +7,10 @@ ODIR=../obj
 _DEPS = semutil.h shmutil.h pclock.h proc_table.h pcb.h util.h sharedvals.h procq.h sched.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = oss.o shmutil.o semutil.o pclock.o proc_table.o pcb.o util.o sharedvals.o procq.h sched.h
+_OBJ = oss.o shmutil.o semutil.o pclock.o proc_table.o pcb.o util.o procq.o sched.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_USER = user.o shmutil.o semutil.o pclock.o proc_table.o pcb.o util.o sharedvals.o procq.h sched.h
+_USER = user.o shmutil.o semutil.o pclock.o proc_table.o pcb.o util.o procq.o sched.o
 USER = $(patsubst %,$(ODIR)/%,$(_USER))
 
 

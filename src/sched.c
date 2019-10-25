@@ -7,6 +7,8 @@ void init_multi_level_feedback_queue(multi_level_feedback_queue_t* q) {
     q->time_quanta[0] = HIGH_PRIORITY_QUANTA;
     int i;
     for (i = 1; i < QUEUE_COUNT; ++i) {
+        init_process_queue(&q->active_queues[i]);
+        init_process_queue(&q->expired_queues[i]);
         q->time_quanta[i] = q->time_quanta[i - 1] / 2;
     }
 }

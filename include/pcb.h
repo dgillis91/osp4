@@ -24,6 +24,7 @@ typedef struct pcb {
     process_state_t state;
     process_priority_t priority;
     /* Times */
+    unsigned int init_time;
     unsigned int start_time_tick;
     unsigned int stop_time_tick;
     unsigned int wake_time;

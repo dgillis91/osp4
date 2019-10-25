@@ -19,6 +19,7 @@ typedef struct pcb_table {
 int init_process_table(int key);
 int destruct_process_table();
 int is_process_buffer_full();
+void deallocate_pid(pcb_t* pcb);
 int allocate_next_pid(pid_t actual_pid);
 int get_abstract_pid_from_actual(pid_t actual_pid);
 pcb_t* get_pcb(unsigned int abstract_pid);
